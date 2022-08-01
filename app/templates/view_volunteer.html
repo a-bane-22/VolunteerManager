@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Volunteer Dashboard</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ url_for('edit_volunteer', volunteer_id=volunteer.id) }}" class="btn btn-primary" role="button">Edit</a>
+            <a href="{{ url_for('delete_volunteer', volunteer_id=volunteer.id) }}" class="btn btn-danger" role="button">Delete</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Volunteer Information</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td>Name</td>
+                        <td>{{ volunteer.get_name() }}</td>
+                    </tr>
+                    <tr>
+                        <td>DOB</td>
+                        <td>{{ volunteer.dob }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ volunteer.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>{{ volunteer.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>{{ volunteer.get_address() }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

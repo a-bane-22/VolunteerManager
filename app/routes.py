@@ -2,8 +2,9 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import (LoginForm, RegistrationForm, UserForm, ChangePasswordForm, DeleteUserForm)
-from app.models import User
+from app.forms import (LoginForm, RegistrationForm, UserForm, ChangePasswordForm, DeleteUserForm,
+                       VolunteerForm, SearchVolunteerForm)
+from app.models import User, Volunteer
 
 
 @app.route('/')
@@ -135,3 +136,87 @@ def delete_user(user_id):
         else:
             return redirect(url_for('index'))
     return render_template('delete_user.html', title='Delete User', form=form, user=user)
+
+
+@app.route('/view_volunteers')
+@login_required
+def view_volunteers():
+    volunteers = Volunteer.query.all()
+    return render_template('view_volunteers.html', title='View Volunteers', volunteers=volunteers)
+
+
+@app.route('/view_volunteer/<volunteer_id>')
+@login_required
+def view_volunteer(volunteer_id):
+    volunteer = Volunteer.query.get(int(volunteer_id))
+    return render_template('view_volunteer.html', title='View Volunteer', volunteer=volunteer)
+
+
+@app.route('/add_volunteer', methods=['GET', 'POST'])
+@login_required
+def add_volunteer():
+    form = VolunteerForm()
+    if form.validate_on_submit():
+        volunteer = Volunteer(first_name=form.first_name.data, last_name=form.last_name.data,
+                              dob=form.dob.data, email=form.email.data, phone=form.phone.data,
+                              address=form.address.data, city=form.city.data, state=form.state.data,
+                              zip=form.zip.data)
+        db.session.add(volunteer)
+        db.session.commit()
+        return redirect(url_for('view_volunteer', volunteer_id=volunteer.id))
+    return render_template('add_volunteer.html', title='Add Volunteer', form=form)
+
+
+@app.route('/edit_volunteer/<volunteer_id>', methods=['GET', 'POST'])
+@login_required
+def edit_volunteer(volunteer_id):
+    volunteer = Volunteer.query.get(int(volunteer_id))
+    form = VolunteerForm()
+    if form.validate_on_submit():
+        volunteer.first_name = form.first_name.data
+        volunteer.last_name = form.last_name.data
+        volunteer.dob = form.dob.data
+        volunteer.email = form.email.data
+        volunteer.phone = form.phone.data
+        volunteer.address = form.address.data
+        volunteer.city = form.city.data
+        volunteer.state = form.state.data
+        volunteer.zip = form.zip.data
+        db.session.add(volunteer)
+        db.session.commit()
+        return redirect(url_for('view_volunteer', volunteer_id=volunteer.id))
+    form.first_name.data = volunteer.first_name
+    form.last_name.data = volunteer.last_name
+    form.dob.data = volunteer.dob
+    form.email.data = volunteer.email
+    form.phone.data = volunteer.phone
+    form.address.data = volunteer.address
+    form.city.data = volunteer.city
+    form.state.data = volunteer.state
+    form.zip.data = volunteer.zip
+    return render_template('edit_volunteer.html', title='Edit Volunteer', form=form)
+
+
+@app.route('/delete_volunteer/<volunteer_id>')
+@login_required
+def delete_volunteer(volunteer_id):
+    volunteer = Volunteer.query.get(int(volunteer_id))
+    db.session.delete(volunteer)
+    db.session.commit()
+    return redirect(url_for('view_volunteers'))
+
+
+@app.route('/search_volunteer', methods=['GET', 'POST'])
+@login_required
+def search_volunteer():
+    form = SearchVolunteerForm()
+    if form.validate_on_submit():
+        name = form.name.data.split(' ')
+        first_name, last_name = name[0], name[1]
+        volunteer = Volunteer.query.filter_by(first_name=first_name, last_name=last_name).first()
+        if volunteer is not None:
+            return redirect(url_for('view_volunteer', volunteer_id=volunteer.id))
+        flash('No volunteer found with that name')
+        return redirect(url_for('search_volunteer'))
+    return render_template('search_volunteer.html', title='Search Volunteer', form=form)
+

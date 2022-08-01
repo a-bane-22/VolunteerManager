@@ -21,8 +21,23 @@
                     <li><a href="{{ url_for('login') }}">Login</a></li>
                     <li><a href="{{ url_for('register') }}">Register</a></li>
                 {% else %}
-                    <li><a href="{{ url_for('view_user', user_id=current_user.id) }}">User Profile</a></li>
-                    <li><a href="{{ url_for('view_users') }}">View Users</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">User<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('view_user', user_id=current_user.id) }}">Profile</a></li>
+                            <li><a href="{{ url_for('edit_user', user_id=current_user.id) }}">Edit Profile</a></li>
+                            <li><a href="{{ url_for('add_user') }}">Add User</a></li>
+                            <li><a href="{{ url_for('view_users') }}">View Users</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Volunteer<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('view_volunteers') }}">View Volunteers</a></li>
+                            <li><a href="{{ url_for('add_volunteer') }}">Add Volunteer</a></li>
+                            <li><a href="{{ url_for('search_volunteer') }}">Search Volunteer</a></li>
+                        </ul>
+                    </li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% endif %}
             </ul>

@@ -43,16 +43,34 @@ class RegistrationForm(UserBase):
 
 
 class UserForm(UserBase):
-    submit = SubmitField('Save User')
+    submit = SubmitField('Save')
 
 
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Old Password', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Change Password')
+    submit = SubmitField('Submit')
 
 
 class DeleteUserForm(FlaskForm):
     confirm = BooleanField('Confirm')
-    submit = SubmitField('Submit Selection')
+    submit = SubmitField('Submit')
+
+
+class VolunteerForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    dob = DateField('DOB', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    phone = StringField('Phone', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    state = StringField('State', validators=[DataRequired()])
+    zip = StringField('ZIP', validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+
+class SearchVolunteerForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    submit = SubmitField('Search')

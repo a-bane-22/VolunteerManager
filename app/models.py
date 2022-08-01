@@ -28,3 +28,22 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+class Volunteer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(32), index=True)
+    last_name = db.Column(db.String(32), index=True)
+    dob = db.Column(db.Date, index=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    phone = db.Column(db.String(10))
+    address = db.Column(db.String(120))
+    city = db.Column(db.String(32))
+    state = db.Column(db.String(24))
+    zip = db.Column(db.String(10))
+
+    def get_name(self):
+        return self.first_name + ' ' + self.last_name
+
+    def get_address(self):
+        return self.address + ', ' + self.city + ', ' + self.state + ' ' + self.zip

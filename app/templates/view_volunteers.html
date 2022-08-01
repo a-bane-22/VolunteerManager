@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Volunteers</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>DOB</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Delete Volunteer</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for volunteer in volunteers %}
+                <tr>
+                    <th><a href="{{ url_for('view_volunteer', volunteer_id=volunteer.id) }}">{{ volunteer.get_name() }}</a></th>
+                    <th>{{ volunteer.dob }}</th>
+                    <th>{{ volunteer.email }}</th>
+                    <th>{{ volunteer.phone }}</th>
+                    <th>{{ volunteer.get_address() }}</th>
+                    <th><a href="{{ url_for('delete_volunteer', volunteer_id=volunteer.id) }}" class="btn btn-danger" role="button">Delete</a></th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
